@@ -1,18 +1,22 @@
-cmake_minimum_required(VERSION 2.4.6)
-include($ENV{ROS_ROOT}/core/rosbuild/rosbuild.cmake)
+cmake_minimum_required(VERSION 3.5)
+project(rtt_motion_control_msgs)
 
-# Set the build type.  Options are:
-#  Coverage       : w/ debug symbols, w/o optimization, w/ code-coverage
-#  Debug          : w/ debug symbols, w/o optimization
-#  Release        : w/o debug symbols, w/ optimization
-#  RelWithDebInfo : w/ debug symbols, w/ optimization
-#  MinSizeRel     : w/o debug symbols, w/ optimization, stripped binaries
-set(ROS_BUILD_TYPE MinSizeRel)
+# find_package(Boost REQUIRED COMPONENTS
+#   program_options
+# )
 
-rosbuild_init()
+find_package(ament_cmake REQUIRED)
+find_package(rtt_ros2_interfaces REQUIRED)
 
-rosbuild_include(rtt_rosnode GenerateRTTtypekit)
+# generate typekit
+rtt_ros2_generate_interfaces_plugins(motion_control_msgs)
 
-ros_generate_rtt_typekit(motion_control_msgs)
+ament_package()
 
-
+# orocos_generate_package() is deprecated for ROS 2.
+# Prefer cmake target export and import instead, in combination with
+# ament_export_interfaces() or ament_export_targets() when building with
+# ament_cmake.
+orocos_generate_package(
+  DEPENDS_TARGETS rtt_ros2_interfaces
+)
